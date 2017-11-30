@@ -21,7 +21,6 @@ void Save();
 void PrintMonster(string fileName);
 void gotoxy(int x, int y);
 void Menu();
-void ApearMonster(int mapNum);
 void Printmap(WMap&map);
 int Move(int _x, int _y, WMap&map, int mapNum);
 string GameStory(int& choose);
@@ -575,100 +574,8 @@ int Move(int _x, int _y, WMap&map, int mapNum)
 			user.GetInven().InventoryInfo();
 			Sleep(1000);
 			Printmap(map);
+			break;
 		}
-		case RIGHT:
-
-			if (y < 19 && map.wmap[x][y + 1] == "□")
-			{
-				
-				y++, x2 += 2;
-				map.wmap[x][y - 1] = "□";
-				map.wmap[x][y] = "★";
-				Printmap(map);
-				ApearMonster(map.MapNum());
-				gotoxy(x2, y2);
-				system("cls");
-				Printmap(map);
-			}
-			else if (y == 19 && map.GetRight() != NULL)
-			{
-				system("cls");
-				map.wmap[x][y] = "□";
-				map.GetRight()->wmap[x][0] = "★";
-				Printmap(*(map.GetRight()));
-				run = Move(x, 0, *(map.GetRight()), map.MapNum());
-				return 0;
-			}
-			break;
-		case LEFT:
-			if (0 < y && map.wmap[x][y - 1] == "□")
-			{
-
-				y--, x2 -= 2;
-
-				map.wmap[x][y + 1] = "□";
-				map.wmap[x][y] = "★";
-				gotoxy(x2, y2);
-				Printmap(map);
-				ApearMonster(map.MapNum());
-				system("cls");
-				Printmap(map);
-			}
-			else if (y == 0 && map.GetLeft() != NULL)
-			{
-				system("cls");
-				map.wmap[x][y] = "□";
-				map.GetLeft()->wmap[x][19] = "★";
-				Printmap(*(map.GetLeft()));
-				run = Move(x, 19, *(map.GetLeft()), map.MapNum());
-				return 0;
-			}
-			break;
-		case UP:
-			if ((0 < x && map.wmap[x - 1][y] == "□"))
-			{
-				--x, y2--;
-
-				map.wmap[x + 1][y] = "□";
-				map.wmap[x][y] = "★";
-				gotoxy(x2, y2);
-				Printmap(map);
-				ApearMonster(map.MapNum());
-				system("cls");
-				Printmap(map);
-			}
-			else if (x == 0 && map.GetUp() != NULL)
-			{
-				system("cls");
-				map.wmap[x][y] = "□";
-				map.GetUp()->wmap[19][y] = "★";
-				Printmap(*(map.GetUp()));
-				run = Move(19, y, *(map.GetUp()), map.MapNum());
-				return 0;
-			}
-			break;
-		case DOWN:
-			if (x < 19 && map.wmap[x + 1][y] == "□")
-			{
-				x++, y2++;
-				map.wmap[x - 1][y] = "□";
-				map.wmap[x][y] = "★";
-				gotoxy(x2, y2);
-				Printmap(map);
-				ApearMonster(map.MapNum());
-				system("cls");
-				Printmap(map);
-			}
-			else if (x == 19 && map.GetDown() != NULL)
-			{
-				system("cls");
-				map.wmap[x][y] = "□";
-				map.GetDown()->wmap[0][y] = "★";
-				Printmap(*(map.GetDown()));
-				run = Move(0, y, *(map.GetDown()), map.MapNum());
-				return 0;
-			}
-			break;
 		case SPACE:
 			if (map.wmap[x + 1][y] == "♡" || map.wmap[x - 1][y] == "♡" || map.wmap[x][y + 1] == "♡" || map.wmap[x][y - 1] == "♡")
 			{
@@ -679,7 +586,7 @@ int Move(int _x, int _y, WMap&map, int mapNum)
 					usermonster.SetHP(80 + (((usermonster).GetLevel()) - 1) * 10);
 				}
 				PrintMonster("럭키.txt", "치료");
-				Sleep(1000);
+				Sleep(2000);
 				system("cls");
 				Printmap(map);
 			}
@@ -762,6 +669,102 @@ int Move(int _x, int _y, WMap&map, int mapNum)
 				Printmap(map);
 			}
 			break;
+			
+		
+		case RIGHT:
+
+			if (y < 19 && map.wmap[x][y + 1] == "□")
+			{
+				gotoxy(x2, y2);
+				printf("□");
+				y++, x2 += 2;
+				map.wmap[x][y - 1] = "□";
+				map.wmap[x][y] = "★";
+				gotoxy(x2, y2);
+				printf("★");
+				gotoxy(x2, y2);
+				ApearMonster(map.MapNum());
+			}
+			else if (y == 19 && map.GetRight() != NULL)
+			{
+				system("cls");
+				map.wmap[x][y] = "□";
+				map.GetRight()->wmap[x][0] = "★";
+				Printmap(*(map.GetRight()));
+				run = Move(x, 0, *(map.GetRight()), map.MapNum());
+				return 0;
+			}
+			break;
+		case LEFT:
+			if (0 < y && map.wmap[x][y - 1] == "□")
+			{
+				gotoxy(x2, y2);
+				printf("□");
+				y--, x2 -= 2;
+				gotoxy(x2, y2);
+				printf("★");
+				map.wmap[x][y + 1] = "□";
+				map.wmap[x][y] = "★";
+				gotoxy(x2, y2);
+				ApearMonster(map.MapNum());
+			}
+			else if (y == 0 && map.GetLeft() != NULL)
+			{
+				system("cls");
+				map.wmap[x][y] = "□";
+				map.GetLeft()->wmap[x][19] = "★";
+				Printmap(*(map.GetLeft()));
+				run = Move(x, 19, *(map.GetLeft()), map.MapNum());
+				return 0;
+			}
+			break;
+		case UP:
+			if ((0 < x && map.wmap[x - 1][y] == "□"))
+			{
+				gotoxy(x2, y2);
+				printf("□");
+				--x, y2--;
+				gotoxy(x2, y2);
+				printf("★");
+				map.wmap[x + 1][y] = "□";
+				map.wmap[x][y] = "★";
+				gotoxy(x2, y2);
+				ApearMonster(map.MapNum());
+			}
+			else if (x == 0 && map.GetUp() != NULL)
+			{
+				system("cls");
+				map.wmap[x][y] = "□";
+				map.GetUp()->wmap[19][y] = "★";
+				Printmap(*(map.GetUp()));
+				run = Move(19, y, *(map.GetUp()), map.MapNum());
+				return 0;
+			}
+			break;
+		case DOWN:
+			if (x < 19 && map.wmap[x + 1][y] == "□")
+			{
+				gotoxy(x2, y2);
+				printf("□");
+				x++, y2++;
+				gotoxy(x2, y2);
+				printf("★");
+				map.wmap[x - 1][y] = "□";
+				map.wmap[x][y] = "★";
+				gotoxy(x2, y2);
+				ApearMonster(map.MapNum());
+			}
+			else if (x == 19 && map.GetDown() != NULL)
+			{
+				system("cls");
+				map.wmap[x][y] = "□";
+				map.GetDown()->wmap[0][y] = "★";
+				Printmap(*(map.GetDown()));
+				run = Move(0, y, *(map.GetDown()), map.MapNum());
+				return 0;
+			}
+			break;
+		
 		}
 	}
 	return 0;
