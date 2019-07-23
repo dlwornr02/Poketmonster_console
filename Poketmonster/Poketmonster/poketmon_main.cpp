@@ -18,13 +18,13 @@
 using namespace std;
 void Load();
 void Save();
-void PrintMonster(string fileName);
+void PrintMonster(string fileName, WMap&map);
 void gotoxy(int x, int y);
 void Menu();
 void Printmap(WMap&map);
 int Move(int _x, int _y, WMap&map, int mapNum);
 string GameStory(int& choose);
-void ApearMonster(int mapNum);
+void ApearMonster(int mapNum, WMap&map);
 void Fight();
 void PrintMyMon(int hp, int exp, string monName);
 void PrintEnemyMon(int hp, int exp, string monName);
@@ -251,7 +251,7 @@ void PrintEnemyMon(Monster& enemymon, int&selectSkill)
 	selectSkill = (rand() % 3 + 1);
 	Sleep(1000);
 }
-void Fight(string enemyname, string montype)
+void Fight(string enemyname, string montype, WMap&map)
 {
 	static int mymonNumber = 1;
 	int selectSkill1, selectSkill2;
@@ -277,7 +277,7 @@ void Fight(string enemyname, string montype)
 			system("cls");
 			user.GetInven().UserMonster(mymonNumber - 1).SetHP(0);
 			user.GetInven().InventoryInfo();
-			cout << "Æ÷ÄÏ¸óÀ» ¼±ÅÃÇÏ¼¼¿ä : ";
+			cout << "´Ù¸¥ Æ÷ÄÏ¸óÀ» ¼±ÅÃÇÏ¼¼¿ä : ";
 			cin >> mymonNumber;
 			if (cin.fail())
 			{
@@ -377,12 +377,13 @@ void Fight(string enemyname, string montype)
 		user.GetInven().UserMonster(mymonNumber - 1).SetExp(-100);
 		user.GetInven().UserMonster(mymonNumber - 1).SetLevel(mymon.GetLevel() + 1);
 	}
+	Printmap(map);
 
 
 }
 
 
-void PrintMonster(string fileName, string montype)
+void PrintMonster(string fileName, string montype, WMap&map)
 {
 	if (rand() % 6 == 0 && fileName != "·°Å°.txt")
 	{
@@ -407,7 +408,7 @@ void PrintMonster(string fileName, string montype)
 		fileName.pop_back();
 		fileName.pop_back();
 		fileName.pop_back();
-		Fight(fileName, montype);
+		Fight(fileName, montype, map);
 
 	}
 	else if (fileName == "·°Å°.txt")
@@ -431,7 +432,7 @@ void PrintMonster(string fileName, string montype)
 		Sleep(1000);
 	}
 }
-void ApearMonster(int mapNum)
+void ApearMonster(int mapNum, WMap&map)
 {
 	srand((unsigned int)time(NULL));
 	int singletype = rand() % 6;
@@ -441,19 +442,19 @@ void ApearMonster(int mapNum)
 
 	if (1 <= mapNum && mapNum <= 4)
 	{
-		PrintMonster(HMonster["ºÒ"][singletype].GetFilename(), "ºÒ");
+		PrintMonster(HMonster["ºÒ"][singletype].GetFilename(), "ºÒ", map);
 	}
 	else if (5 <= mapNum && mapNum <= 8)
 	{
-		PrintMonster(HMonster["¹°"][singletype].GetFilename(), "¹°");
+		PrintMonster(HMonster["¹°"][singletype].GetFilename(), "¹°", map);
 	}
 	else if (9 <= mapNum && mapNum <= 12)
 	{
-		PrintMonster(HMonster["¶¥"][singletype].GetFilename(), "¶¥");
+		PrintMonster(HMonster["¶¥"][singletype].GetFilename(), "¶¥", map);
 	}
 	else if (13 <= mapNum && mapNum <= 16)
 	{
-		PrintMonster(HMonster["Àü±â"][singletype].GetFilename(), "Àü±â");
+		PrintMonster(HMonster["Àü±â"][singletype].GetFilename(), "Àü±â", map);
 	}
 	else if (17 <= mapNum && mapNum <= 18)
 	{
@@ -469,7 +470,7 @@ void ApearMonster(int mapNum)
 		{
 			montype = "¶¥";
 		}
-		PrintMonster(doubletypeMonster[doubletype], montype);
+		PrintMonster(doubletypeMonster[doubletype], montype, map);
 	}
 	else if (19 <= mapNum && mapNum <= 20)
 	{
@@ -485,7 +486,7 @@ void ApearMonster(int mapNum)
 		{
 			montype = "¹°";
 		}
-		PrintMonster(doubletypeMonster[doubletype], montype);
+		PrintMonster(doubletypeMonster[doubletype], montype, map);
 	}
 	else if (21 <= mapNum && mapNum <= 22)
 	{
@@ -501,7 +502,7 @@ void ApearMonster(int mapNum)
 		{
 			montype = "Àü±â";
 		}
-		PrintMonster(doubletypeMonster[doubletype], montype);
+		PrintMonster(doubletypeMonster[doubletype], montype, map);
 	}
 	else if (23 <= mapNum && mapNum <= 24)
 	{
@@ -518,7 +519,7 @@ void ApearMonster(int mapNum)
 		{
 			montype = "Àü±â";
 		}
-		PrintMonster(doubletypeMonster[doubletype], montype);
+		PrintMonster(doubletypeMonster[doubletype], montype, map);
 	}
 	else if (mapNum == 25)
 	{
@@ -585,7 +586,7 @@ int Move(int _x, int _y, WMap&map, int mapNum)
 					Monster& usermonster = user.GetInven().UserMonster(i);
 					usermonster.SetHP(80 + (((usermonster).GetLevel()) - 1) * 10);
 				}
-				PrintMonster("·°Å°.txt", "Ä¡·á");
+				PrintMonster("·°Å°.txt", "Ä¡·á", map);
 				Sleep(2000);
 				system("cls");
 				Printmap(map);
@@ -597,7 +598,7 @@ int Move(int _x, int _y, WMap&map, int mapNum)
 					system("cls");
 					cout << "??? : ´©°¡³¯ ±ú¿ü³ª È­²öÇÑ ºÒ¸ÀÀ» º¸¿©Áà¾ß°Ú±¸¸¸" << endl;
 					Sleep(1000);
-					Fight("¸®ÀÚ¸ù", "ºÒ");
+					Fight("¸®ÀÚ¸ù", "ºÒ", map);
 					Printmap(map);
 				}
 				else if (5 <= mapNum && mapNum <= 8)
@@ -605,7 +606,7 @@ int Move(int _x, int _y, WMap&map, int mapNum)
 					system("cls");
 					cout << "??? : Àá¼ö ÀßÇã³Ä?" << endl;
 					Sleep(1000);
-					Fight("°ÅºÏ¿Õ", "¹°");
+					Fight("°ÅºÏ¿Õ", "¹°", map);
 					Printmap(map);
 				}
 				else if (9 <= mapNum && mapNum <= 12)
@@ -613,7 +614,7 @@ int Move(int _x, int _y, WMap&map, int mapNum)
 					system("cls");
 					cout << "??? : ³­ ²É°¡·ç ¾Ë·¯Áö¸¦ À¯¹ßÇÏÁö" << endl;
 					Sleep(1000);
-					Fight("ÀÌ»óÇØ²É", "¶¥");
+					Fight("ÀÌ»óÇØ²É", "¶¥", map);
 					Printmap(map);
 				}
 				else if (13 <= mapNum && mapNum <= 16)
@@ -621,7 +622,7 @@ int Move(int _x, int _y, WMap&map, int mapNum)
 					system("cls");
 					cout << "??? :  Electric E-E-E-Electric E-E-E-Electric Shoc" << endl << "Àü Àü Àü·ùµéÀÌ ¸öÀ» Å¸°í Èê·¯ ´Ù³à ±â ±â ±âÀý ÇÒ µí ¾Æ½½¾Æ½½ Âî¸´Âî¸´" << endl;
 					Sleep(1000);
-					Fight("¶óÀÌÃò", "Àü±â");
+					Fight("¶óÀÌÃò", "Àü±â", map);
 					Printmap(map);
 				}
 			}
@@ -669,8 +670,8 @@ int Move(int _x, int _y, WMap&map, int mapNum)
 				Printmap(map);
 			}
 			break;
-			
-		
+
+
 		case RIGHT:
 
 			if (y < 19 && map.wmap[x][y + 1] == "¡à")
@@ -683,7 +684,7 @@ int Move(int _x, int _y, WMap&map, int mapNum)
 				gotoxy(x2, y2);
 				printf("¡Ú");
 				gotoxy(x2, y2);
-				ApearMonster(map.MapNum());
+				ApearMonster(map.MapNum(), map);
 			}
 			else if (y == 19 && map.GetRight() != NULL)
 			{
@@ -706,7 +707,7 @@ int Move(int _x, int _y, WMap&map, int mapNum)
 				map.wmap[x][y + 1] = "¡à";
 				map.wmap[x][y] = "¡Ú";
 				gotoxy(x2, y2);
-				ApearMonster(map.MapNum());
+				ApearMonster(map.MapNum(), map);
 			}
 			else if (y == 0 && map.GetLeft() != NULL)
 			{
@@ -729,7 +730,7 @@ int Move(int _x, int _y, WMap&map, int mapNum)
 				map.wmap[x + 1][y] = "¡à";
 				map.wmap[x][y] = "¡Ú";
 				gotoxy(x2, y2);
-				ApearMonster(map.MapNum());
+				ApearMonster(map.MapNum(), map);
 			}
 			else if (x == 0 && map.GetUp() != NULL)
 			{
@@ -752,7 +753,7 @@ int Move(int _x, int _y, WMap&map, int mapNum)
 				map.wmap[x - 1][y] = "¡à";
 				map.wmap[x][y] = "¡Ú";
 				gotoxy(x2, y2);
-				ApearMonster(map.MapNum());
+				ApearMonster(map.MapNum(), map);
 			}
 			else if (x == 19 && map.GetDown() != NULL)
 			{
@@ -764,7 +765,7 @@ int Move(int _x, int _y, WMap&map, int mapNum)
 				return 0;
 			}
 			break;
-		
+
 		}
 	}
 	return 0;
@@ -884,6 +885,7 @@ void Load()
 		*/
 		fin.close();
 		user.SetName(name);
+
 	}
 	else
 	{
